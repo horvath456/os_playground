@@ -1,5 +1,5 @@
-#include "console.h"
-#include "common.h"
+#include "monitor.h"
+#include "types.h"
 
 #define ROWS 25
 #define COLS 80

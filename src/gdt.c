@@ -1,5 +1,5 @@
-#include "common.h"
 #include "descriptor_tables.h"
+#include "types.h"
 
 #define GDT_ENTRIES 5
 

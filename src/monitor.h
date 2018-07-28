@@ -1,7 +1,7 @@
-#ifndef CONSOLE_H
-#define CONSOLE_H
+#ifndef MONITOR_H
+#define MONITOR_H
 
-#include "common.h"
+#include "types.h"
 
 void k_clrscr();
 void k_putc(uint8_t c, uint8_t attr);

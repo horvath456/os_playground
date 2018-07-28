@@ -1,6 +1,6 @@
-#include "common.h"
-#include "console.h"
 #include "descriptor_tables.h"
+#include "monitor.h"
+#include "types.h"
 
 extern void idt_flush(uint32_t);
 

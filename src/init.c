@@ -1,7 +1,7 @@
-#include "common.h"
-#include "console.h"
 #include "gdt.h"
 #include "idt.h"
+#include "monitor.h"
+#include "types.h"
 
 void init(void) {
     uint8_t hw[] = "Hello World! ";

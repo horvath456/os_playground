@@ -1,7 +1,7 @@
 #ifndef GDT_H
 #define GDT_H
 
-#include "common.h"
+#include "types.h"
 
 void init_gdt();
 

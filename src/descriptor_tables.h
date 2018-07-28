@@ -1,7 +1,7 @@
 #ifndef IDT_H
 #define IDT_H
 
-#include "common.h"
+#include "types.h"
 
 #define GDT_FLAG_DATASEG 0x02
 #define GDT_FLAG_CODESEG 0x0a
