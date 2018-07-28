@@ -35,4 +35,3 @@ _start:
 .section .bss
 .space 8192
 kernel_stack:
-
