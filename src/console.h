@@ -6,3 +6,5 @@
 void k_clrscr();
 void k_putc(uint8 c, uint8 attr);
 void k_print(uint8* str, uint8 attr);
+void k_printdec(uint32 a, uint8 attr);
+void k_printhex(uint32 a, uint8 attr);

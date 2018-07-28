@@ -28,3 +28,36 @@ void k_print(uint8 *str, uint8 attr) {
        k_putc(str[i], attr);
    }
 }
+
+void k_printdec(uint32 a, uint8 attr) {
+    uint8 buf[12];
+    buf[11] = 0x0;
+
+    int i = 11;
+
+    while(a >= 1) {
+        uint8 digit = a % 10;
+        buf[--i] = digit+48;
+        a /= 10;
+    }
+
+    k_print(buf+i, attr);
+}
+
+void k_printhex(uint32 a, uint8 attr) {
+    uint8 prefix[] = "0x";
+
+    uint8 buf[9];
+    buf[8] = 0x0;
+
+    int i = 8;
+
+    while(a >= 1) {
+        uint8 digit = a % 16;
+        buf[--i] = digit < 10 ? digit+48 : digit+55;
+        a /= 16;
+    }
+
+    k_print(prefix, attr);
+    k_print(buf+i, attr);
+}
