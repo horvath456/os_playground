@@ -25,22 +25,16 @@ LDFLAGS = -melf_i386 -Tkernel.ld
 $(BIN): $(BINDIR) $(OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) -o $(BIN)
 
-$(BINDIR):
-	mkdir -p $(BINDIR)
+$(OBJDIR)%.o: $(SRCDIR)%.c
+	$(CC) $(CFLAGS) -c -o $@ $^
 
-$(C_OBJS): $(OBJDIR) $(C_SRC)
-	$(CC) $(CFLAGS) -c $(C_SRC) -o $(C_OBJS)
-
-$(S_OBJS): $(OBJDIR) $(S_SRC)
-	$(CC) $(ASFLAGS) -c $(S_SRC) -o $(S_OBJS)
-
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
+$(OBJDIR)%.o: $(SRCDIR)%.S
+	$(CC) $(ASFLAGS) -c -o $@ $^
 
 start:
 	qemu-system-i386 -kernel $(BIN)
 
 clean:
-	rm -rf $(BINDIR) $(OBJDIR)
+	rm -rf $(BINDIR)/* $(OBJDIR)/*
 
 .PHONY: all
