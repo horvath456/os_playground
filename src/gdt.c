@@ -1,32 +1,7 @@
 #include "common.h"
-
-#define GDT_FLAG_DATASEG 0x02
-#define GDT_FLAG_CODESEG 0x0a
-#define GDT_FLAG_TSS 0x09
-#define GDT_FLAG_SEGMENT 0x10
-#define GDT_FLAG_RING0 0x00
-#define GDT_FLAG_RING3 0x60
-#define GDT_FLAG_PRESENT 0x80
-#define GDT_FLAG_4K_GRAN 0x800
-#define GDT_FLAG_32_BIT 0x400
+#include "descriptor_tables.h"
 
 #define GDT_ENTRIES 5
-
-struct gdt_entry_struct {
-    uint16_t limit_low;
-    uint16_t base_low;
-    uint8_t base_middle;
-    uint8_t access;
-    uint8_t granularity;
-    uint8_t base_high;
-} __attribute__((packed));
-typedef struct gdt_entry_struct gdt_entry_t;
-
-struct gdt_ptr_struct {
-    uint16_t limit;
-    uint32_t base;
-} __attribute__((packed));
-typedef struct gdt_ptr_struct gdt_ptr_t;
 
 extern void gdt_flush(uint32_t);
 
@@ -34,7 +9,7 @@ void init_gdt();
 void gdt_set_gate(sint32_t, uint32_t, uint32_t, uint8_t, uint8_t);
 
 gdt_entry_t gdt_entries[5];
-gdt_ptr_t gdt_ptr;
+dt_ptr_t gdt_ptr;
 
 void init_gdt() {
     gdt_ptr.limit = (sizeof(gdt_entry_t) * 5) - 1;
