@@ -31,4 +31,3 @@ SECTIONS
         *(.bss)
     }
 }
-
