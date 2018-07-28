@@ -26,14 +26,14 @@ void k_putc(uint8_t c, uint8_t attr) {
     }
 }
 
-void k_print(uint8_t* str, uint8_t attr) {
+void k_print(char* str, uint8_t attr) {
     for (int i = 0; str[i] != '\0'; i++) {
-        k_putc(str[i], attr);
+        k_putc((uint8_t)str[i], attr);
     }
 }
 
 void k_printdec(uint32_t a, uint8_t attr) {
-    uint8_t buf[12];
+    char buf[12];
     buf[11] = 0x0;
 
     int i = 11;
@@ -48,9 +48,7 @@ void k_printdec(uint32_t a, uint8_t attr) {
 }
 
 void k_printhex(uint32_t a, uint8_t attr) {
-    uint8_t prefix[] = "0x";
-
-    uint8_t buf[9];
+    char buf[9];
     buf[8] = 0x0;
 
     int i = 8;
@@ -61,6 +59,6 @@ void k_printhex(uint32_t a, uint8_t attr) {
         a /= 16;
     }
 
-    k_print(prefix, attr);
+    k_print("0x", attr);
     k_print(buf + i, attr);
 }
