@@ -1,4 +1,8 @@
+#include "common.h"
+#include "console.h"
+
 void init(void) {
+    k_clrscr();
 
    const char hw[] = "Hello World!";
    int i;
@@ -10,4 +14,6 @@ void init(void) {
        // 0x07 = Hellgrau auf Schwarz
        video[i * 2 + 1] = 0x07;
    }
+
+   k_putc('Z', 0x07);
 }
