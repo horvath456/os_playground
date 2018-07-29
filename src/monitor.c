@@ -7,6 +7,7 @@
 #define COLS 80
 
 uint8_t* video = (uint8_t*)0xb8000;
+uint16_t* video_word = (uint16_t*)0xb8000;
 
 uint8_t cursor_x = 0;
 uint8_t cursor_y = 0;
@@ -23,12 +24,12 @@ static void scroll() {
     uint16_t blank = 0x00;
 
     if (cursor_y >= ROWS) {
-        for (int i = 0 * COLS; i < (ROWS - 1) * COLS; i++) {
-            video[i] = video[i + COLS];
+        for (int i = 0; i < (ROWS - 1) * COLS; i++) {
+            video_word[i] = video_word[i + COLS];
         }
 
         for (int i = (ROWS - 1) * COLS; i < ROWS * COLS; i++) {
-            video[i] = blank;
+            video_word[i] = blank;
         }
         cursor_y = (ROWS - 1);
     }
@@ -44,10 +45,16 @@ void k_clrscr() {
 }
 
 void k_putc(uint8_t c, uint8_t attr) {
-    video[cursor_y * COLS * 2 + cursor_x * 2] = c;
-    video[cursor_y * COLS * 2 + cursor_x * 2 + 1] = attr;
+    if (c == '\n') {
+        cursor_y++;
+        cursor_x = 0;
+    } else {
+        video[cursor_y * COLS * 2 + cursor_x * 2] = c;
+        video[cursor_y * COLS * 2 + cursor_x * 2 + 1] = attr;
 
-    cursor_x++;
+        cursor_x++;
+    }
+
     if (cursor_x > 80) {
         cursor_x = 0;
         cursor_y++;

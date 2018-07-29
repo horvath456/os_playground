@@ -1,10 +1,13 @@
 #include "isr.h"
+#include "monitor.h"
 #include "ports.h"
 #include "types.h"
 
-void timer_callback(registers_t regs) {}
+void timer_callback(registers_t regs) { kprintf("hello\n"); }
 
 void init_timer(uint32_t frequency) {
+    register_interrupt_handler(IRQ0, &timer_callback);
+
     uint32_t divisor = 1193180 / frequency;
 
     outb(0x43, 0x36);
