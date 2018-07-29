@@ -1,4 +1,6 @@
 #include "monitor.h"
+#include "/usr/lib/gcc/x86_64-linux-gnu/5/include/stdarg.h"
+#include "ports.h"
 #include "types.h"
 
 #define ROWS 25
@@ -6,27 +8,56 @@
 
 uint8_t* video = (uint8_t*)0xb8000;
 
-uint8_t x_screen = 0;
-uint8_t y_screen = 0;
+uint8_t cursor_x = 0;
+uint8_t cursor_y = 0;
+
+static void move_cursor() {
+    uint16_t cursorLocation = cursor_y * COLS + cursor_x;
+    outb(0x3D4, 14);  // Tell the VGA board we are setting the high cursor byte.
+    outb(0x3D5, cursorLocation >> 8);  // Send the high cursor byte.
+    outb(0x3D4, 15);  // Tell the VGA board we are setting the low cursor byte.
+    outb(0x3D5, cursorLocation);  // Send the low cursor byte.
+}
+
+static void scroll() {
+    uint16_t blank = 0x00;
+
+    if (cursor_y >= ROWS) {
+        for (int i = 0 * COLS; i < (ROWS - 1) * COLS; i++) {
+            video[i] = video[i + COLS];
+        }
+
+        for (int i = (ROWS - 1) * COLS; i < ROWS * COLS; i++) {
+            video[i] = blank;
+        }
+        cursor_y = (ROWS - 1);
+    }
+}
 
 void k_clrscr() {
     for (int i = 0; i < ROWS * COLS * 2; i++) {
         video[i] = 0x0;
     }
+
+    cursor_x = 0;
+    cursor_y = 0;
 }
 
 void k_putc(uint8_t c, uint8_t attr) {
-    video[y_screen * COLS * 2 + x_screen * 2] = c;
-    video[y_screen * COLS * 2 + x_screen * 2 + 1] = attr;
+    video[cursor_y * COLS * 2 + cursor_x * 2] = c;
+    video[cursor_y * COLS * 2 + cursor_x * 2 + 1] = attr;
 
-    x_screen++;
-    if (x_screen > 80) {
-        x_screen = 0;
-        y_screen++;
+    cursor_x++;
+    if (cursor_x > 80) {
+        cursor_x = 0;
+        cursor_y++;
     }
+
+    scroll();
+    move_cursor();
 }
 
-void k_print(char* str, uint8_t attr) {
+void k_print(const char* str, uint8_t attr) {
     for (int i = 0; str[i] != '\0'; i++) {
         k_putc((uint8_t)str[i], attr);
     }
@@ -61,4 +92,34 @@ void k_printhex(uint32_t a, uint8_t attr) {
 
     k_print("0x", attr);
     k_print(buf, attr);
+}
+
+void kprintf(const char* format, ...) {
+    va_list parameters;
+    va_start(parameters, format);
+
+    uint8_t attr = 0x07;
+
+    for (int i = 0; format[i] != '\0'; i++) {
+        char c = format[i];
+
+        if (c == '%') {
+            if (format[i + 1] == 'd') {
+                uint32_t d = (uint32_t)va_arg(parameters, int);
+                k_printdec(d, attr);
+            } else if (format[i + 1] == 'x') {
+                uint32_t d = (uint32_t)va_arg(parameters, int);
+                k_printhex(d, attr);
+            } else if (format[i + 1] == 's') {
+                const char* str = va_arg(parameters, const char*);
+                k_print(str, attr);
+            }
+            i++;
+            continue;
+        } else {
+            k_putc(c, attr);
+        }
+    }
+
+    va_end(parameters);
 }

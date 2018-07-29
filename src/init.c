@@ -6,7 +6,7 @@
 
 void init(void) {
     k_clrscr();
-    k_print("Hello World!", 0x07);
+    kprintf("Hello %d %x Worl %s d!", 5, 0xAFFE, "substr");
 
     init_gdt();
     init_idt();
