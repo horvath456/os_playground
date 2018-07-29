@@ -1,11 +1,13 @@
 #include "descriptor_tables.h"
 #include "monitor.h"
+#include "ports.h"
 #include "types.h"
 
 extern void idt_flush(uint32_t);
 
 void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags);
 void init_idt();
+void init_pic();
 
 idt_entry_t idt_entries[256];
 dt_ptr_t idt_ptr;
@@ -17,6 +19,8 @@ void init_idt() {
     for (int i = 0; i < 256; i++) {
         idt_set_gate(i, 0x0, 0x0, 0x0);
     }
+
+    init_pic();
 
     idt_set_gate(0, (uint32_t)isr0, 0x08, 0x8E);
     idt_set_gate(1, (uint32_t)isr1, 0x08, 0x8E);
@@ -60,4 +64,20 @@ void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
     idt_entries[num].sel = sel;
     idt_entries[num].always0 = 0;
     idt_entries[num].flags = flags;
+}
+
+void init_pic() {
+    // Master-PIC initialisieren
+    outb(0x20, 0x11);  // Initialisierungsbefehl fuer den PIC
+    outb(0x21, 0x20);  // Interruptnummer fuer IRQ 0
+    outb(0x21, 0x04);  // An IRQ 2 haengt der Slave
+    outb(0x21, 0x01);  // ICW 4
+    // Slave-PIC initialisieren
+    outb(0xa0, 0x11);  // Initialisierungsbefehl fuer den PIC
+    outb(0xa1, 0x28);  // Interruptnummer fuer IRQ 8
+    outb(0xa1, 0x02);  // An IRQ 2 haengt der Slave
+    outb(0xa1, 0x01);  // ICW 4
+    // Alle IRQs aktivieren (demaskieren)
+    outb(0x21, 0x0);
+    outb(0xa1, 0x0);
 }
