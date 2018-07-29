@@ -1,6 +1,7 @@
 #include "gdt.h"
 #include "idt.h"
 #include "monitor.h"
+#include "timer.h"
 #include "types.h"
 
 void init(void) {
@@ -10,5 +11,9 @@ void init(void) {
     init_gdt();
     init_idt();
 
-    asm volatile("int $0x0");
+    asm volatile("sti");
+
+    init_timer(1000);
+
+    int a = 1 / 0;
 }
