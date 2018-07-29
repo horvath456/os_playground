@@ -18,7 +18,7 @@
 #define IRQ12 44
 #define IRQ13 45
 #define IRQ14 46
-#define IRQ15 47
+#define IRQ 47
 
 typedef struct registers {
     uint32_t ds;                                      // Data segment selector
@@ -29,7 +29,7 @@ typedef struct registers {
         ss;  // Pushed by the processor automatically.
 } registers_t;
 
-typedef void (*isr_t)(registers_t);
+typedef registers_t* (*isr_t)(registers_t);
 void register_interrupt_handler(uint8_t n, isr_t handler);
 
 #endif

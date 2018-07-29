@@ -1,15 +1,10 @@
 #include "isr.h"
 #include "monitor.h"
+#include "multitasking.h"
 #include "ports.h"
 #include "types.h"
 
-uint32_t tick = 0;
-
-static void timer_callback(registers_t regs) {
-    tick++;
-    k_print("Tick: ", 0x07);
-    k_printdec(tick, 0x07);
-}
+registers_t* timer_callback(registers_t regs) { return schedule(&regs); }
 
 void init_timer(uint32_t frequency) {
     register_interrupt_handler(IRQ0, &timer_callback);

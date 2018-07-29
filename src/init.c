@@ -14,6 +14,4 @@ void init(void) {
     asm volatile("sti");
 
     init_timer(1000);
-
-    int a = 1 / 0;
 }
