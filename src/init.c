@@ -6,12 +6,10 @@
 
 void init(void) {
     k_clrscr();
-    kprintf("Hello %d %x Worl %s d!", 5, 0xAFFE, "substr");
+    kprintf("Hello World");
 
     init_gdt();
     init_idt();
 
-    asm volatile("sti");
-
-    init_timer(1000);
+    init_timer(1);
 }

@@ -2,8 +2,8 @@
   [GLOBAL isr%1]        ; %1 accesses the first parameter.
   isr%1:
     cli
-    push byte 0
-    push byte %1
+    push dword 0
+    push dword %1
     jmp isr_common_stub
 %endmacro
 
@@ -11,7 +11,7 @@
   [GLOBAL isr%1]
   isr%1:
     cli
-    push byte %1
+    push dword %1
     jmp isr_common_stub
 %endmacro
 
@@ -83,7 +83,9 @@ isr_common_stub:
     mov fs, ax
     mov gs, ax
 
+    push esp
     call isr_handler
+    mov esp, eax
 
     pop ebx        ; reload the original data segment descriptor
     mov ds, bx

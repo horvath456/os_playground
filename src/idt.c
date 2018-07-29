@@ -7,8 +7,8 @@ extern void idt_flush(uint32_t);
 
 void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags);
 void init_idt();
-void init_pic();
-void set_gates();
+static void init_pic();
+static void set_gates();
 
 idt_entry_t idt_entries[256];
 dt_ptr_t idt_ptr;
@@ -25,6 +25,8 @@ void init_idt() {
     set_gates();
 
     idt_flush((uint32_t)&idt_ptr);
+
+    asm volatile("sti");
 }
 
 void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
@@ -35,7 +37,7 @@ void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
     idt_entries[num].flags = flags;
 }
 
-void init_pic() {
+static void init_pic() {
     // Master-PIC initialisieren
     outb(0x20, 0x11);  // Initialisierungsbefehl fuer den PIC
     outb(0x21, 0x20);  // Interruptnummer fuer IRQ 0
@@ -51,7 +53,7 @@ void init_pic() {
     outb(0xa1, 0x0);
 }
 
-void set_gates() {
+static void set_gates() {
     idt_set_gate(0, (uint32_t)isr0, 0x08, 0x8E);
     idt_set_gate(1, (uint32_t)isr1, 0x08, 0x8E);
     idt_set_gate(2, (uint32_t)isr2, 0x08, 0x8E);
