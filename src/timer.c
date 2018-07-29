@@ -3,7 +3,7 @@
 #include "ports.h"
 #include "types.h"
 
-void timer_callback(registers_t regs) { kprintf("hello\n"); }
+void timer_callback(registers_t* regs) { kprintf("hello\n"); }
 
 void init_timer(uint32_t frequency) {
     register_interrupt_handler(IRQ0, &timer_callback);
