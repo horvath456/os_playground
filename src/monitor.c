@@ -38,18 +38,18 @@ void k_printdec(uint32_t a, uint8_t attr) {
 
     int i = 11;
 
-    while (a >= 1) {
+    while (1) {
         uint8_t digit = a % 10;
         buf[--i] = digit + 48;
         a /= 10;
+        if (a == 0) break;
     }
 
     k_print(buf + i, attr);
 }
 
 void k_printhex(uint32_t a, uint8_t attr) {
-    char buf[9];
-    buf[8] = 0x0;
+    char buf[9] = "00000000\0";
 
     int i = 8;
 
@@ -60,5 +60,5 @@ void k_printhex(uint32_t a, uint8_t attr) {
     }
 
     k_print("0x", attr);
-    k_print(buf + i, attr);
+    k_print(buf, attr);
 }
