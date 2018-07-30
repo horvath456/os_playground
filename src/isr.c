@@ -36,7 +36,7 @@ static registers_t* handle_irq(registers_t* regs) {
 
     if (interrupt_handlers[regs->int_no] != 0) {
         isr_t handler = interrupt_handlers[regs->int_no];
-        handler(regs);
+        new_regs = handler(regs);
     }
 
     return new_regs;

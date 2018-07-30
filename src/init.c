@@ -2,6 +2,7 @@
 #include "idt.h"
 #include "keyboard.h"
 #include "monitor.h"
+#include "tasks.h"
 #include "timer.h"
 #include "types.h"
 
@@ -13,4 +14,7 @@ void init(void) {
     init_idt();
 
     init_keyboard();
+
+    init_multitasking();
+    init_timer(110000);
 }
