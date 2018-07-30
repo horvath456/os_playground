@@ -1,5 +1,5 @@
-#ifndef IDT_H
-#define IDT_H
+#ifndef DESCRIPTOR_TABLES_H
+#define DESCRIPTOR_TABLES_H
 
 #include "types.h"
 
