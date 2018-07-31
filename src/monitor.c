@@ -1,5 +1,5 @@
 #include "monitor.h"
-#include "/usr/lib/gcc/x86_64-linux-gnu/5/include/stdarg.h"
+#include <stdarg.h>
 #include "ports.h"
 #include "types.h"
 

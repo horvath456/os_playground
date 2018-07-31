@@ -25,7 +25,7 @@ NASM = nasm
 
 ASFLAGS = -m32
 NASMFLAGS = -felf
-CFLAGS = -m32 -Wall -g -fno-stack-protector -nostdinc
+CFLAGS = -m32 -Wall -g -fno-stack-protector
 LDFLAGS = -melf_i386 -Tkernel.ld
 
 $(BIN): $(BINDIR) $(OBJS)
