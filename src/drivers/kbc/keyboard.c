@@ -1,13 +1,12 @@
-#include "isr.h"
-#include "monitor.h"
-#include "ports.h"
-#include "types.h"
+#include "../../isr.h"
+#include "../../monitor.h"
+#include "../../ports.h"
+#include "../../types.h"
 
 static void send_command(uint8_t command);
-static registers_t* irq_handler(registers_t* regs);
+static void irq_handler();
 void init_keyboard();
-void handle_keycode(uint8_t keycode);
-uint8_t translate_scancode(int set, uint16_t scancode);
+static uint8_t translate_scancode(int set, uint16_t scancode);
 
 static uint8_t sc_to_kc[][128] = {
     // Normale Scancodes
@@ -47,7 +46,7 @@ static void send_command(uint8_t command) {
     outb(0x60, command);
 }
 
-static registers_t* irq_handler(registers_t* regs) {
+static void irq_handler() {
     uint8_t scancode;
     uint8_t keycode = 0;
     int break_code = 0;
@@ -73,7 +72,7 @@ static registers_t* irq_handler(registers_t* regs) {
         // Fake shift abfangen und ignorieren
         if ((scancode == 0x2A) || (scancode == 0x36)) {
             e0_code = 0;
-            return regs;
+            return;
         }
 
         keycode = translate_scancode(1, scancode);
@@ -100,11 +99,9 @@ static registers_t* irq_handler(registers_t* regs) {
     }
 
     kprintf("keycode: %d", keycode);
-
-    return regs;
 }
 
-uint8_t translate_scancode(int set, uint16_t scancode) {
+static uint8_t translate_scancode(int set, uint16_t scancode) {
     uint8_t keycode = 0;
 
     switch (set) {

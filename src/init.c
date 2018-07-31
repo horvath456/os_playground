@@ -1,6 +1,6 @@
+#include "drivers/kbc/keyboard.h"
 #include "gdt.h"
 #include "idt.h"
-#include "keyboard.h"
 #include "monitor.h"
 #include "tasks.h"
 #include "timer.h"

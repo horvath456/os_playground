@@ -9,10 +9,13 @@ registers_t* isr_handler(registers_t* regs);
 static registers_t* handle_irq(registers_t* regs);
 
 isr_t interrupt_handlers[256];
+isr_irq0_t irq0_handler;
 
 void register_interrupt_handler(uint8_t n, isr_t handler) {
     interrupt_handlers[n] = handler;
 }
+
+void register_irq0_handler(isr_irq0_t handler) { irq0_handler = handler; }
 
 registers_t* isr_handler(registers_t* regs) {
     registers_t* new_regs = regs;
@@ -34,9 +37,11 @@ static registers_t* handle_irq(registers_t* regs) {
     }
     outb(0x20, 0x20);
 
-    if (interrupt_handlers[regs->int_no] != 0) {
+    if (regs->int_no == IRQ0 && irq0_handler != 0) {
+        new_regs = irq0_handler(regs);
+    } else if (interrupt_handlers[regs->int_no] != 0) {
         isr_t handler = interrupt_handlers[regs->int_no];
-        new_regs = handler(regs);
+        handler();
     }
 
     return new_regs;
