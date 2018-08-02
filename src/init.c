@@ -16,5 +16,5 @@ void init(void) {
     init_keyboard();
 
     init_multitasking();
-    init_timer(110000);
+    init_timer(10);
 }

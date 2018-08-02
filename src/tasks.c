@@ -4,17 +4,13 @@
 
 void task_a() {
     while (1) {
-        asm volatile("cli");
         k_print("A", 0x9B);
-        asm volatile("sti");
     }
 }
 
 void task_b() {
     while (1) {
-        asm volatile("cli");  // critical section !!
         k_print("B", 0xA4);
-        asm volatile("sti");
     }
 }
 
