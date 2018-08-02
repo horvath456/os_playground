@@ -1,10 +1,17 @@
+#include "gdt.h"
 #include "isr.h"
 #include "monitor.h"
 #include "ports.h"
 #include "tasks.h"
 #include "types.h"
 
-registers_t* timer_callback(registers_t* regs) { return schedule(regs); }
+// todo move callback to tasks.c
+
+registers_t* timer_callback(registers_t* regs) {
+    registers_t* new_regs = schedule(regs);
+    change_TSS_esp0((uint32_t)new_regs + 1);
+    return new_regs;
+}
 
 void init_timer(uint32_t frequency) {
     register_irq0_handler(&timer_callback);
