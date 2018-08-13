@@ -128,5 +128,7 @@ void kprintf(const char* format, ...) {
         }
     }
 
+    k_print("\n", attr);
+
     va_end(parameters);
 }

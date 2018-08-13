@@ -3,7 +3,7 @@
 #include "types.h"
 
 void cpu_dump(registers_t* cpu) {
-    kprintf("CPU DUMP:\n");
+    kprintf("CPU DUMP:");
     kprintf("EIP: %x   CS: %x   EFLAGS: %x   USERESP: %x   SS: %x", cpu->eip,
             cpu->cs, cpu->eflags, cpu->useresp, cpu->ss);
     kprintf("DS: %x   EDI: %x   ESI: %x   EBP: %x   ESP: %x", cpu->ds, cpu->edi,
