@@ -1,5 +1,5 @@
-# os
-A hobby os.
+# OS Playground
+An attempt to create a minimum x86 os skeleton.
 
 
 # Quickstart
